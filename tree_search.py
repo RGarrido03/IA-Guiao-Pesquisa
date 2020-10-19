@@ -91,6 +91,7 @@ class SearchTree:
         self.solution = None
         self._terminals = 0
         self._non_terminals = 1
+        self.avg_ramification = None
 
     @property
     def terminals(self):
@@ -119,6 +120,7 @@ class SearchTree:
             node = self.open_nodes.pop(0)
             if self.problem.goal_test(node.state):
                 self.solution = node
+                self.avg_ramification = (self.terminals+self.non_terminals-1)/self.non_terminals
                 return self.get_path(node)
             lnewnodes = []
             for a in self.problem.domain.actions(node.state):
