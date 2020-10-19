@@ -65,6 +65,14 @@ class SearchNode:
     def __init__(self,state,parent): 
         self.state = state
         self.parent = parent
+
+    def in_parent(self, node):
+        if self.parent is None:
+            return False
+        if self.parent.state == node.state:
+            return True
+        return self.parent.in_parent(node) 
+
     def __str__(self):
         return "no(" + str(self.state) + "," + str(self.parent) + ")"
     def __repr__(self):
@@ -98,7 +106,8 @@ class SearchTree:
             for a in self.problem.domain.actions(node.state):
                 newstate = self.problem.domain.result(node.state,a)
                 newnode = SearchNode(newstate,node)
-                lnewnodes.append(newnode)
+                if not node.in_parent(newnode):
+                    lnewnodes.append(newnode)
             self.add_to_open(lnewnodes)
         return None
 
