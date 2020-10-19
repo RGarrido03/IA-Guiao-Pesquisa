@@ -89,6 +89,16 @@ class SearchTree:
         self.open_nodes = [root]
         self.strategy = strategy
         self.solution = None
+        self._terminals = 0
+        self._non_terminals = 1
+
+    @property
+    def terminals(self):
+        return self._terminals + len(self.open_nodes)
+
+    @property
+    def non_terminals(self):
+        return self._non_terminals
 
     # obter o caminho (sequencia de estados) da raiz ate um no
     def get_path(self,node):
@@ -116,6 +126,12 @@ class SearchTree:
                 newnode = SearchNode(newstate,node,node.depth+1)
                 if not node.in_parent(newnode) and (limit is None or newnode.depth < limit):
                     lnewnodes.append(newnode)
+            
+            if lnewnodes == []:
+                self._terminals+=1
+            else:
+                self._non_terminals+=1
+
             self.add_to_open(lnewnodes)
         return None
 
