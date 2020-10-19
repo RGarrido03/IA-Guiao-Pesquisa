@@ -98,6 +98,11 @@ class SearchTree:
         path += [node.state]
         return(path)
 
+    def length(self):
+        if self.solution:
+            return self.solution.depth
+        return None
+
     # procurar a solucao
     def search(self):
         while self.open_nodes != []:
