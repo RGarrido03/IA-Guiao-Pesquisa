@@ -62,9 +62,10 @@ class SearchProblem:
 
 # Nos de uma arvore de pesquisa
 class SearchNode:
-    def __init__(self,state,parent): 
+    def __init__(self,state,parent, depth=0): 
         self.state = state
         self.parent = parent
+        self.depth = depth
 
     def in_parent(self, node):
         if self.parent is None:
@@ -84,9 +85,10 @@ class SearchTree:
     # construtor
     def __init__(self,problem, strategy='breadth'): 
         self.problem = problem
-        root = SearchNode(problem.initial, None)
+        root = SearchNode(problem.initial, None,0)
         self.open_nodes = [root]
         self.strategy = strategy
+        self.solution = None
 
     # obter o caminho (sequencia de estados) da raiz ate um no
     def get_path(self,node):
@@ -101,11 +103,12 @@ class SearchTree:
         while self.open_nodes != []:
             node = self.open_nodes.pop(0)
             if self.problem.goal_test(node.state):
+                self.solution = node
                 return self.get_path(node)
             lnewnodes = []
             for a in self.problem.domain.actions(node.state):
                 newstate = self.problem.domain.result(node.state,a)
-                newnode = SearchNode(newstate,node)
+                newnode = SearchNode(newstate,node,node.depth+1)
                 if not node.in_parent(newnode):
                     lnewnodes.append(newnode)
             self.add_to_open(lnewnodes)
