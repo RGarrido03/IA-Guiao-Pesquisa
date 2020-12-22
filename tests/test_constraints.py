@@ -22,4 +22,5 @@ def test_exercicio1_5():
 
 
 def test_exercicio2():
-    assert amigos.cs.calls == 14
+    assert amigos.cs.calls == 3
+
