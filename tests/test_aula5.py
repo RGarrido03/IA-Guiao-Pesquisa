@@ -6,6 +6,11 @@ def braga_faro():
     return SearchProblem(cidades_portugal,'Braga','Faro')
 
 def test_exercicio11(braga_faro):
+    assert round(cidades_portugal.heuristic('Aveiro', 'Agueda'),2) == 18.38
+    assert round(cidades_portugal.heuristic('Agueda', 'Aveiro'),2) == 18.38
+    assert round(cidades_portugal.heuristic('Aveiro', 'Lisboa'),2) == 218.87
+
+def test_exercicio12(braga_faro):
     t = SearchTree(braga_faro, 'depth')
 
     assert t.search() == ['Braga', 'Porto', 'Agueda', 'Aveiro', 'Coimbra', 'Leiria', 'Castelo Branco', 'Santarem', 'Lisboa', 'Evora', 'Beja', 'Faro']
@@ -13,11 +18,6 @@ def test_exercicio11(braga_faro):
 
     assert t.solution.parent.state == 'Beja' 
     assert round(t.solution.parent.heuristic, 2) == 140.09 
-
-def test_exercicio12(braga_faro):
-    assert round(cidades_portugal.heuristic('Aveiro', 'Agueda'),2) == 18.38
-    assert round(cidades_portugal.heuristic('Agueda', 'Aveiro'),2) == 18.38
-    assert round(cidades_portugal.heuristic('Aveiro', 'Lisboa'),2) == 218.87
 
 def test_exercicio13(braga_faro):
     t = SearchTree(braga_faro, 'greedy')
@@ -46,5 +46,3 @@ def test_exercicio16(braga_faro):
     t.search()
     assert round(t.average_depth,2) == 9.02
  
-
-9.015893881453154
