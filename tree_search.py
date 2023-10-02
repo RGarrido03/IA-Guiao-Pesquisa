@@ -1,4 +1,3 @@
-
 # Module: tree_search
 # 
 # This module provides a set o classes for automated
@@ -13,6 +12,7 @@
 #  Inteligência Artificial, 2014-2019
 
 from abc import ABC, abstractmethod
+
 
 # Dominios de pesquisa
 # Permitem calcular
@@ -51,30 +51,35 @@ class SearchDomain(ABC):
 
 
 # Problemas concretos a resolver
-# dentro de um determinado dominio
+# num determinado dominio
 class SearchProblem:
     def __init__(self, domain, initial, goal):
         self.domain = domain
         self.initial = initial
         self.goal = goal
+
     def goal_test(self, state):
-        return self.domain.satisfies(state,self.goal)
+        return self.domain.satisfies(state, self.goal)
+
 
 # Nos de uma arvore de pesquisa
 class SearchNode:
-    def __init__(self,state,parent): 
+    def __init__(self, state, parent):
         self.state = state
         self.parent = parent
+
     def __str__(self):
         return "no(" + str(self.state) + "," + str(self.parent) + ")"
+
     def __repr__(self):
         return str(self)
+
 
 # Arvores de pesquisa
 class SearchTree:
 
     # construtor
-    def __init__(self,problem, strategy='breadth'): 
+    def __init__(self, problem, strategy='breadth'):
         self.problem = problem
         root = SearchNode(problem.initial, None)
         self.open_nodes = [root]
@@ -82,12 +87,12 @@ class SearchTree:
         self.solution = None
 
     # obter o caminho (sequencia de estados) da raiz ate um no
-    def get_path(self,node):
+    def get_path(self, node):
         if node.parent == None:
             return [node.state]
         path = self.get_path(node.parent)
         path += [node.state]
-        return(path)
+        return (path)
 
     # procurar a solucao
     def search(self):
@@ -98,18 +103,17 @@ class SearchTree:
                 return self.get_path(node)
             lnewnodes = []
             for a in self.problem.domain.actions(node.state):
-                newstate = self.problem.domain.result(node.state,a)
-                newnode = SearchNode(newstate,node)
+                newstate = self.problem.domain.result(node.state, a)
+                newnode = SearchNode(newstate, node)
                 lnewnodes.append(newnode)
             self.add_to_open(lnewnodes)
         return None
 
     # juntar novos nos a lista de nos abertos de acordo com a estrategia
-    def add_to_open(self,lnewnodes):
+    def add_to_open(self, lnewnodes):
         if self.strategy == 'breadth':
             self.open_nodes.extend(lnewnodes)
         elif self.strategy == 'depth':
             self.open_nodes[:0] = lnewnodes
         elif self.strategy == 'uniform':
             pass
-
