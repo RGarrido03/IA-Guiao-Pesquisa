@@ -106,7 +106,7 @@ cidades_portugal = Cidades(
 )
 
 p = SearchProblem(cidades_portugal, 'Braga', 'Faro')
-t = SearchTree(p, 'breadth')
+t = SearchTree(p, 'depth')
 
 print(t.search())
 

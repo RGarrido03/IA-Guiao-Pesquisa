@@ -64,9 +64,17 @@ class SearchProblem:
 
 # Nos de uma arvore de pesquisa
 class SearchNode:
-    def __init__(self, state, parent):
+    def __init__(self, state, parent, depth):
         self.state = state
         self.parent = parent
+        self.depth = depth
+
+    def in_parent(self, newstate):
+        if self.parent is None:
+            return False
+        if self.state == newstate:
+            return True
+        return self.parent.in_parent(newstate)
 
     def __str__(self):
         return "no(" + str(self.state) + "," + str(self.parent) + ")"
@@ -81,10 +89,23 @@ class SearchTree:
     # construtor
     def __init__(self, problem, strategy='breadth'):
         self.problem = problem
-        root = SearchNode(problem.initial, None)
+        root = SearchNode(problem.initial, None, 0)
         self.open_nodes = [root]
         self.strategy = strategy
         self.solution = None
+        self.non_terminals = 0
+
+    @property
+    def terminals(self):
+        return len(self.open_nodes)
+
+    @property
+    def length(self):
+        return self.solution.depth
+
+    @property
+    def avg_branching(self):
+        return (self.non_terminals + self.terminals - 1) / self.non_terminals
 
     # obter o caminho (sequencia de estados) da raiz ate um no
     def get_path(self, node):
@@ -95,17 +116,19 @@ class SearchTree:
         return (path)
 
     # procurar a solucao
-    def search(self):
+    def search(self, limit=None):
         while self.open_nodes != []:
             node = self.open_nodes.pop(0)
             if self.problem.goal_test(node.state):
                 self.solution = node
                 return self.get_path(node)
+            self.non_terminals += 1
             lnewnodes = []
             for a in self.problem.domain.actions(node.state):
                 newstate = self.problem.domain.result(node.state, a)
-                newnode = SearchNode(newstate, node)
-                lnewnodes.append(newnode)
+                if not node.in_parent(newstate) and (limit is None or node.depth < limit):
+                    newnode = SearchNode(newstate, node, node.depth + 1)
+                    lnewnodes.append(newnode)
             self.add_to_open(lnewnodes)
         return None
 
