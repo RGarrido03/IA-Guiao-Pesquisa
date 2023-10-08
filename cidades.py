@@ -6,7 +6,7 @@
 #
 # (c) Luis Seabra Lopes
 # Introducao a Inteligencia Artificial, 2012-2020
-# Inteligência Artificial, 2014-2020
+# Inteligência Artificial, 2014-2023
 #
 
 

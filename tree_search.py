@@ -9,8 +9,8 @@
 #    SearchTree    - search tree with the necessary methods for searhing
 #
 #  (c) Luis Seabra Lopes
-#  Introducao a Inteligencia Artificial, 2012-2019,
-#  Inteligência Artificial, 2014-2019
+#  Introducao a Inteligencia Artificial, 2012-2020,
+#  Inteligência Artificial, 2014-2023
 
 from abc import ABC, abstractmethod
 
