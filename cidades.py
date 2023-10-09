@@ -33,7 +33,14 @@ class Cidades(SearchDomain):
             return C2
 
     def cost(self, city, action):
-        pass
+        (a1, a2) = action
+
+        if a1 != city:
+            return None
+
+        for c1, c2, d in self.connections:
+            if (c1, c2) in [(a1, a2), (a2, a1)]:
+                return d
 
     def heuristic(self, city, goal_city):
         pass
