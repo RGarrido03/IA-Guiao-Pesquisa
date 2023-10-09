@@ -1,5 +1,5 @@
-# iia-ia-guiao-python
-Programação ao Estilo Funcional em Python
+# iia-ia-guiao-pesquisa
+Guião de resolução automatica de problemas
 
 # Como resolver o guião
 1. Crie um virtual environment:
