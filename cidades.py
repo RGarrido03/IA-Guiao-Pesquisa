@@ -8,7 +8,7 @@
 # Introducao a Inteligencia Artificial, 2012-2020
 # Inteligência Artificial, 2014-2020
 #
-
+import math
 
 from tree_search import *
 
@@ -43,7 +43,7 @@ class Cidades(SearchDomain):
                 return d
 
     def heuristic(self, city, goal_city):
-        pass
+        return math.dist(self.coordinates[city], self.coordinates[goal_city])
 
     def satisfies(self, city, goal_city):
         return goal_city == city

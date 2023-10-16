@@ -66,16 +66,17 @@ class SearchProblem:
 
 # Nos de uma arvore de pesquisa
 class SearchNode:
-    def __init__(self, state, parent, depth, cost):
+    def __init__(self, state, parent, depth, cost, heuristic):
         self.state = state
         self.parent = parent
         self.depth = depth
         self.cost = cost
+        self.heuristic = heuristic
 
     def in_parent(self, newstate):
         if self.parent is None:
             return False
-        if self.state == newstate:
+        if self.parent.state == newstate:
             return True
         return self.parent.in_parent(newstate)
 
@@ -92,15 +93,17 @@ class SearchTree:
     # construtor
     def __init__(self, problem, strategy='breadth'):
         self.problem = problem
-        root = SearchNode(problem.initial, None, 0, 0)
+        root = SearchNode(problem.initial, None, 0, 0, problem.domain.heuristic(problem.initial, problem.goal))
         self.open_nodes = [root]
         self.strategy = strategy
         self.solution = None
         self.non_terminals = 0
+        self.highest_cost_nodes = [root]
+        self.average_depth = root.depth
 
     @property
     def terminals(self):
-        return len(self.open_nodes)
+        return len(self.open_nodes) + 1
 
     @property
     def length(self):
@@ -124,11 +127,12 @@ class SearchTree:
 
     # procurar a solucao
     def search(self, limit=None):
-        while self.open_nodes != []:
+        while self.open_nodes:
             node = self.open_nodes.pop(0)
 
             if self.problem.goal_test(node.state):
                 self.solution = node
+                self.average_depth /= self.terminals + self.non_terminals
                 return self.get_path(node)
 
             self.non_terminals += 1
@@ -137,7 +141,17 @@ class SearchTree:
             for a in self.problem.domain.actions(node.state):
                 newstate = self.problem.domain.result(node.state, a)
                 if not node.in_parent(newstate) and (limit is None or node.depth < limit):
-                    newnode = SearchNode(newstate, node, node.depth + 1, node.cost + cidades.cidades_portugal.cost(node.state, a))
+                    newnode = SearchNode(newstate, node, node.depth + 1,
+                                         node.cost + cidades.cidades_portugal.cost(node.state, a),
+                                         self.problem.domain.heuristic(newstate, self.problem.goal))
+
+                    self.average_depth += newnode.depth
+
+                    if newnode.cost > self.highest_cost_nodes[0].cost:
+                        self.highest_cost_nodes = [newnode]
+                    elif newnode.cost == self.highest_cost_nodes[0].cost:
+                        self.highest_cost_nodes.append(newnode)
+
                     lnewnodes.append(newnode)
 
             self.add_to_open(lnewnodes)
@@ -152,3 +166,9 @@ class SearchTree:
         elif self.strategy == 'uniform':
             self.open_nodes.extend(lnewnodes)
             self.open_nodes.sort(key=lambda n: n.cost)
+        elif self.strategy == 'greedy':
+            self.open_nodes.extend(lnewnodes)
+            self.open_nodes.sort(key=lambda n: n.heuristic)
+        elif self.strategy == 'a*':
+            self.open_nodes.extend(lnewnodes)
+            self.open_nodes.sort(key=lambda n: n.cost + n.heuristic)
