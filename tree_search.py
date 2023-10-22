@@ -13,8 +13,6 @@
 
 from abc import ABC, abstractmethod
 
-import cidades
-
 
 # Dominios de pesquisa
 # Permitem calcular
@@ -142,7 +140,7 @@ class SearchTree:
                 newstate = self.problem.domain.result(node.state, a)
                 if not node.in_parent(newstate) and (limit is None or node.depth < limit):
                     newnode = SearchNode(newstate, node, node.depth + 1,
-                                         node.cost + cidades.cidades_portugal.cost(node.state, a),
+                                         node.cost + self.problem.domain.cost(node.state, a),
                                          self.problem.domain.heuristic(newstate, self.problem.goal))
 
                     self.average_depth += newnode.depth
