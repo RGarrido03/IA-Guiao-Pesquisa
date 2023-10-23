@@ -40,6 +40,9 @@ class Holds(Predicate):
     def __init__(self,block):
         self.args = [block]
 
+    def __hash__(self):
+        return hash((self.args[0]))
+
 class HandFree(Predicate):
     hash_int = 0
 

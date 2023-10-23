@@ -107,7 +107,7 @@ class STRIPS(SearchDomain):
         newstate = [s for s in state if s not in action.neg]
 
         # Efeitos positivos
-        return newstate + action.pos
+        return set(newstate + action.pos)
 
     def cost(self, state, action):
         return 1
